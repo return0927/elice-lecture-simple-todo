@@ -24,6 +24,7 @@ const initialList = [
 function App() {
   const [isLoading, setLoading] = useState(true);
   const [toDoList, setToDoList] = useState(initialList);
+  const [lastFetched, setLastFetched] = useState(new Date());
 
   useEffect(() => {
     useAxios.setup();
@@ -40,7 +41,7 @@ function App() {
       setToDoList(list.map((v) => { return { id: v.id, content: v.fields.Name, isCompleted: v.fields.isCompleted }; }));
       setLoading(false);
     });
-  }, []);
+  }, [lastFetched]);
 
   const handleToggle = async (id) => {
     let found = undefined;
@@ -63,9 +64,10 @@ function App() {
   const handleSubmit = async (value) => {
     await axios.post("/", { records: [{ fields: { Name: value, isCompleted: false } }] })
       .then(v => {
+        setLastFetched(new Date());
         let copy = [...toDoList, ...v.data.records.map(todo => { return { id: todo.id, content: todo.fields.Name, isCompleted: todo.fields.isCompleted }; })];
         // window.location.reload(false);
-        setToDoList(copy);
+        // setToDoList(copy);
         console.log(v.data);
       });
 
