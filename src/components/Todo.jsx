@@ -44,6 +44,7 @@ function Todo({ value, toggleHandler }) {
         />
         {content}
       </StyledLabel>
+      {/* eslint-disable-next-line no-alert */}
       <StyledButton onClick={() => alert('implement me')}>삭제</StyledButton>
     </StyledLi>
   );

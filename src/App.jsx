@@ -53,7 +53,8 @@ function App() {
     let found;
     const mapped = toDoList.map((todo) => {
       if (todo.id === id) {
-        return (found = { ...todo, isCompleted: !todo.isCompleted });
+        found = { ...todo, isCompleted: !todo.isCompleted };
+        return found;
       }
       return { ...todo };
     });
@@ -74,14 +75,14 @@ function App() {
       .post('/', { records: [{ fields: { Name: value, isCompleted: false } }] })
       .then((v) => {
         setLastFetched(new Date());
-        const copy = [
-          ...toDoList,
-          ...v.data.records.map((todo) => ({
-            id: todo.id,
-            content: todo.fields.Name,
-            isCompleted: todo.fields.isCompleted,
-          })),
-        ];
+        // const copy = [
+        //   ...toDoList,
+        //   ...v.data.records.map((todo) => ({
+        //     id: todo.id,
+        //     content: todo.fields.Name,
+        //     isCompleted: todo.fields.isCompleted,
+        //   })),
+        // ];
         // window.location.reload(false);
         // setToDoList(copy);
         console.log(v.data);
