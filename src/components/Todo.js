@@ -43,10 +43,14 @@ const Todo = ({ value, toggleHandler, deleteHandler, updateHandler }) => {
         setUpdatingContent(event.target.value);
     }
 
+    function updateContent() {
+        updateHandler(id, updatingContent);
+        setIsEditing(false);
+    }
+
     function keyPressHandler(event) {
         if (event.charCode === 13) {
-            updateHandler(id, updatingContent);
-            setIsEditing(false);
+            updateContent();
         }
     }
 
@@ -58,14 +62,18 @@ const Todo = ({ value, toggleHandler, deleteHandler, updateHandler }) => {
                     checked={!!isCompleted}
                 ></input>
                 {
-                    (isEditing) ?
-                        <input value={updatingContent} onChange={changeInputHandler}
-                            onKeyPress={keyPressHandler}></input> :
-                        <>{content}</>
+                    (isEditing)
+                    ? <input value={updatingContent} onChange={changeInputHandler}
+                            onKeyPress={keyPressHandler}></input>
+                    : <>{content}</>
                 }
             </StyledLabel>
             <StyledButton onClick={clickDeleteHandler} delete={true}>삭제</StyledButton>
-            <StyledButton onClick={() => setIsEditing(true)}>수정</StyledButton>
+            {
+                (isEditing)
+                ? <StyledButton onClick={updateContent}>완료</StyledButton>
+                : <StyledButton onClick={() => setIsEditing(true)}>수정</StyledButton>
+            }
         </StyledLi>
     );
 }
