@@ -76,13 +76,38 @@ function App() {
     
   }
 
+  async function handleDelete(id) {
+    await axios.delete(`/${id}`).then(v => {
+      setLastFetched(new Date());
+    })
+  }
+
+  async function handleUpdate(id, content) {
+    let found = undefined;
+    const mapped = toDoList.map((todo) => {
+      if (todo.id === id) {
+        return found = { ...todo, content };
+      }
+      else
+        return { ...todo };
+    });
+
+    setToDoList(mapped);
+    
+    await axios.patch(`/${id}`, { fields: { Name: found.content, isCompleted: found.isCompleted } })
+        .then(console.log);
+  }
+
   if (isLoading) return <Container>
     <span>Loading...</span>
   </Container>
   return (
     <Container>
       <TodoInput submitHandler={handleSubmit}></TodoInput>
-      <TodoList toDoList={toDoList} toggleHandler={handleToggle}></TodoList>
+      <TodoList toDoList={toDoList} toggleHandler={handleToggle}
+        deleteHandler={handleDelete}
+        updateHandler={handleUpdate}
+      ></TodoList>
     </Container>
   );
 }

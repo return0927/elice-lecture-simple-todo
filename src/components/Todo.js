@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 import "./Todo.css";
 
@@ -24,11 +25,29 @@ const StyledButton = styled.button`
     cursor: pointer;
 `
 
-const Todo = ({ value, toggleHandler }) => {
+const Todo = ({ value, toggleHandler, deleteHandler, updateHandler }) => {
     const { id, content, isCompleted } = value;
+    const [ isEditing, setIsEditing ] = useState(false);
+    const [ updatingContent, setUpdatingContent ] = useState(content);
 
     const clickHandler = (event) => {
         toggleHandler(id);
+    }
+
+    function clickDeleteHandler(event) {
+        event.preventDefault();
+        deleteHandler(id);
+    }
+
+    function changeInputHandler(event) {
+        setUpdatingContent(event.target.value);
+    }
+
+    function keyPressHandler(event) {
+        if (event.charCode === 13) {
+            updateHandler(id, updatingContent);
+            setIsEditing(false);
+        }
     }
 
     return (
@@ -38,9 +57,15 @@ const Todo = ({ value, toggleHandler }) => {
                     id={id} onChange={clickHandler}
                     checked={!!isCompleted}
                 ></input>
-                {content}
+                {
+                    (isEditing) ?
+                        <input value={updatingContent} onChange={changeInputHandler}
+                            onKeyPress={keyPressHandler}></input> :
+                        <>{content}</>
+                }
             </StyledLabel>
-            <StyledButton onClick={() => alert('implement me')}>삭제</StyledButton>
+            <StyledButton onClick={clickDeleteHandler} delete={true}>삭제</StyledButton>
+            <StyledButton onClick={() => setIsEditing(true)}>수정</StyledButton>
         </StyledLi>
     );
 }
