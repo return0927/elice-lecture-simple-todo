@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
+import { ToDoContext } from "../contexts/todoContext";
 import "./Todo.css";
 
 const StyledLi = styled.li`
@@ -25,27 +26,31 @@ const StyledButton = styled.button`
     cursor: pointer;
 `
 
-const Todo = ({ value, toggleHandler, deleteHandler, updateHandler }) => {
+const Todo = ({ value }) => {
+    const { dispatch } = useContext(ToDoContext);
     const { id, content, isCompleted } = value;
     const [ isEditing, setIsEditing ] = useState(false);
     const [ updatingContent, setUpdatingContent ] = useState(content);
 
     const clickHandler = (event) => {
-        toggleHandler(id);
+        dispatch({ type: 'TOGGLE_TODO', value: id});
     }
 
     function clickDeleteHandler(event) {
         event.preventDefault();
-        deleteHandler(id);
+        dispatch({ type: 'DELETE_TODO', value: id });
+    }
+
+    function updateContent() {
+        dispatch({
+            type: 'UPDATE_TODO',
+            value: { id, isCompleted, content: updatingContent }
+        });
+        setIsEditing(false);
     }
 
     function changeInputHandler(event) {
         setUpdatingContent(event.target.value);
-    }
-
-    function updateContent() {
-        updateHandler(id, updatingContent);
-        setIsEditing(false);
     }
 
     function keyPressHandler(event) {

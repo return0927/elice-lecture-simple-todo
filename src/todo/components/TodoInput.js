@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import styled from "styled-components";
+import { ToDoContext } from "../contexts/todoContext";
 
 const FormInput = styled.input`
     width: 335px;
@@ -10,7 +11,8 @@ const FormInput = styled.input`
     padding-left: 10px;
 `
 
-const TodoInput = ({ submitHandler }) => {
+const TodoInput = () => {
+    const { dispatch } = useContext(ToDoContext);
     const [userInput, setUserInput] = useState("");
 
     const handleChange = (event) => {
@@ -19,7 +21,7 @@ const TodoInput = ({ submitHandler }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        submitHandler(userInput);
+        dispatch({ type: 'CREATE_TODO', value: userInput, dispatch });
         setUserInput("");
     }
 
